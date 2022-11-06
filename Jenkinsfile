@@ -1,5 +1,5 @@
 node ('ubuntu-app-agent'){  
-    //def app
+    def app
     stage('Cloning Git') {
         /* Let's make sure we have the repository cloned to our workspace */
        checkout scm
@@ -14,13 +14,13 @@ node ('ubuntu-app-agent'){
     	sh 'echo build-and-tag'
 	/* This builds the actual image; synonymous to
          * docker build on the command line */
-        // app = docker.build("amrit96/snake")
+        app = docker.build("fabz/test-snake")
     }
     stage('Post-to-dockerhub') {
      sh "echo post-to-dockerhub"
-     /*docker.withRegistry('https://registry.hub.docker.com', 'training_creds') {
+     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
             app.push("latest")
-        			}*/
+        			}
          }
     stage('SECURITY-IMAGE-SCANNER'){
         sh "echo security-image-scanner"
@@ -30,8 +30,8 @@ node ('ubuntu-app-agent'){
     
     stage('Pull-image-server') {
     	 sh "echo pull-image"
-         /*sh "docker-compose down"
-         sh "docker-compose up -d"*/	
+         sh "docker-compose down"
+         sh "docker-compose up -d"	
       }
     
     stage('DAST')
